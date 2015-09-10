@@ -9,11 +9,11 @@ static int board_Size;
 
 class action{
 public:
-	 int x,y,x1,y1;
-	 action(){
+	int x,y,x1,y1;
+	action(){
+	}
 
-	 }
-	 action(int i,int j,int k,int l){
+	action(int i,int j,int k,int l){
 		x=i;y=j;x1=k;y1=l;
 	}
 };
@@ -40,6 +40,7 @@ public:
 	player  p;
 	int depth;
 	int* colorCount;
+	int stateScore = 0;
 
 	state(){
 		depth=0;
@@ -102,7 +103,7 @@ public:
 		return actions;
 
 	}
-	
+
 	vector<action> orderActions(){
 		vector<action> actions;
 		for(int i=0;i<board_Size;i++){
@@ -140,7 +141,8 @@ public:
 		return s1;
 	}
 	int utility(){
-		return numPalindrome();
+	    numPalindrome();
+		return this->stateScore;
 	}
 
 	vector<action> moveRight(int i,int j){
@@ -333,7 +335,7 @@ public:
 		cout<<"new vector"<<endl;
 	}
 
-	int numPalindrome(){
+	void numPalindrome(){
 		int score = 0;
 		int palindromeLength = 0;
 		for (int row = 0; row < board_Size; row++){
@@ -394,7 +396,8 @@ public:
 				// cout<<"score = "<<score<<endl;
 			}
 		}
-		return score;
+		this->stateScore = score;
+		//return this->stateScore;
 	}
 
 	void printboard()
@@ -437,8 +440,6 @@ public:
 // 	//printvector(s1->actions());
 
 // 	//cout<<s.board[3][3];
-	
+
 // 	// cout<<a.x<<a.y<<a.x1<<a.y1;
 // }
-
- 
