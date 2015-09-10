@@ -1,0 +1,12 @@
+# config file for the server
+
+# They are just key value pairs, TREAT THE VALUES AS STRINGS
+
+# options: single/tournament  (tournament mode is under construction)
+gamemode: single
+
+# if the user does not specify port!
+port: 8000
+
+# The server does not wait after this no. of connections
+max_clients: 2
