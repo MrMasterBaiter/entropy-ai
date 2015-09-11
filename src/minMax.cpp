@@ -164,7 +164,7 @@ int main(){
 	s.board[4][2]=0;
 	s.board[2][3]=2;
 	s.board[4][3]=0;
-	cout<<s.numPalindrome()<<endl;
+	cout<<"score of state s = "<<s.utility()<<endl;
 	 // action a(3,3,0,0);
 	// state* s1=s.result(&s,a);
 	// printvector(s.actions());
