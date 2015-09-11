@@ -163,7 +163,11 @@ int main(){
 	s.board[4][0]=0;
 	s.board[4][2]=0;
 	s.board[2][3]=2;
+<<<<<<< HEAD
 	s.board[4][3]=0;
+=======
+	s.board[4][3]=0;
+>>>>>>> c391c52615cb6b1bcf4c1a16b4b162eb5548ffe8
 	cout<<"score of state s = "<<s.utility()<<endl;
 	 // action a(3,3,0,0);
 	// state* s1=s.result(&s,a);

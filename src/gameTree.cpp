@@ -9,11 +9,11 @@ static int board_Size;
 
 class action{
 public:
-	 int x,y,x1,y1;
-	 action(){
+	int x,y,x1,y1;
+	action(){
 
-	 }
-	 action(int i,int j,int k,int l){
+	}
+	action(int i,int j,int k,int l){
 		x=i;y=j;x1=k;y1=l;
 	}
 };
