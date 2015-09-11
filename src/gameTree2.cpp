@@ -412,14 +412,14 @@ public:
 			while ((indexLeft >= 0) && (indexRight <= board_Size-1)){
 				if (parentState->board[row][indexRight] != -1){
 					if (parentState->board[row][indexLeft] == parentState->board[row][indexRight]){
-						stateScore -= palindromeLength;
+						tempScore -= palindromeLength;
 						// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
 					}
 					palindromeLength++;
 					indexLeft--;
 					if (indexLeft >= 0){
 						if (parentState->board[row][indexLeft] == parentState->board[row][indexRight]){
-							stateScore -= palindromeLength;
+							tempScore -= palindromeLength;
 							// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
 						}
 					}
@@ -440,14 +440,14 @@ public:
 			while ((indexTop >= 0) && (indexBot <= board_Size-1)){
 				if (parentState->board[indexBot][col] != -1){
 					if (parentState->board[indexTop][col] == parentState->board[indexBot][col]){
-						stateScore -= palindromeLength;
+						tempScore -= palindromeLength;
 						// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
 					}
 					palindromeLength++;
 					indexTop--;
 					if (indexTop >= 0){
 						if (parentState->board[indexTop][col] == parentState->board[indexBot][col]){
-							stateScore -= palindromeLength;
+							tempScore -= palindromeLength;
 							// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
 						}
 					}
@@ -462,8 +462,8 @@ public:
 			}
 		}
 
-		int row = a.x1;
-		int col = a.y1;
+		row = a.x1;
+		col = a.y1;
 		for(int i = 0; i < board_Size; i++){	
 			int palindromeLength = 2;
 			int indexLeft = i;
@@ -471,14 +471,14 @@ public:
 			while ((indexLeft >= 0) && (indexRight <= board_Size-1)){
 				if (this->board[row][indexRight] != -1){
 					if (this->board[row][indexLeft] == this->board[row][indexRight]){
-						stateScore += palindromeLength;
+						tempScore += palindromeLength;
 						// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
 					}
 					palindromeLength++;
 					indexLeft--;
 					if (indexLeft >= 0){
 						if (this->board[row][indexLeft] == this->board[row][indexRight]){
-							stateScore += palindromeLength;
+							tempScore += palindromeLength;
 							// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
 						}
 					}
@@ -499,14 +499,14 @@ public:
 			while ((indexTop >= 0) && (indexBot <= board_Size-1)){
 				if (this->board[indexBot][col] != -1){
 					if (this->board[indexTop][col] == this->board[indexBot][col]){
-						stateScore += palindromeLength;
+						tempScore += palindromeLength;
 						// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
 					}
 					palindromeLength++;
 					indexTop--;
 					if (indexTop >= 0){
 						if (this->board[indexTop][col] == this->board[indexBot][col]){
-							stateScore += palindromeLength;
+							tempScore += palindromeLength;
 							// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
 						}
 					}
@@ -520,6 +520,127 @@ public:
 				}
 			}
 		}
+		this->stateScore = tempScore;
+	}
+
+	void updateScore(action2 a){
+		int tempScore = parentState->stateScore;
+		int row = a.x;
+		int col = a.y;
+		for(int i = 0; i < board_Size; i++){	
+			int palindromeLength = 2;
+			int indexLeft = i;
+			int indexRight = i+1;
+			while ((indexLeft >= 0) && (indexRight <= board_Size-1)){
+				if (parentState->board[row][indexRight] != -1){
+					if (parentState->board[row][indexLeft] == parentState->board[row][indexRight]){
+						tempScore -= palindromeLength;
+						// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexLeft--;
+					if (indexLeft >= 0){
+						if (parentState->board[row][indexLeft] == parentState->board[row][indexRight]){
+							tempScore -= palindromeLength;
+							// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexRight++;
+				}
+				else{
+					indexLeft--;
+					indexRight++;
+					palindromeLength += 2;
+				}
+			}
+		}
+		for(int i = 0; i < board_Size; i++){
+			int palindromeLength = 2;
+			int indexTop = i;
+			int indexBot = i+1;
+			while ((indexTop >= 0) && (indexBot <= board_Size-1)){
+				if (parentState->board[indexBot][col] != -1){
+					if (parentState->board[indexTop][col] == parentState->board[indexBot][col]){
+						tempScore -= palindromeLength;
+						// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexTop--;
+					if (indexTop >= 0){
+						if (parentState->board[indexTop][col] == parentState->board[indexBot][col]){
+							tempScore -= palindromeLength;
+							// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexBot++;
+				}
+				else{
+					palindromeLength += 2;
+					indexTop--;
+					indexBot++;
+				}
+			}
+		}
+
+		for(int i = 0; i < board_Size; i++){	
+			int palindromeLength = 2;
+			int indexLeft = i;
+			int indexRight = i+1;
+			while ((indexLeft >= 0) && (indexRight <= board_Size-1)){
+				if (this->board[row][indexRight] != -1){
+					if (this->board[row][indexLeft] == this->board[row][indexRight]){
+						tempScore += palindromeLength;
+						// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexLeft--;
+					if (indexLeft >= 0){
+						if (this->board[row][indexLeft] == this->board[row][indexRight]){
+							tempScore += palindromeLength;
+							// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexRight++;
+				}
+				else{
+					indexLeft--;
+					indexRight++;
+					palindromeLength += 2;
+				}
+			}
+		}
+		for(int i = 0; i < board_Size; i++){
+			int palindromeLength = 2;
+			int indexTop = i;
+			int indexBot = i+1;
+			while ((indexTop >= 0) && (indexBot <= board_Size-1)){
+				if (this->board[indexBot][col] != -1){
+					if (this->board[indexTop][col] == this->board[indexBot][col]){
+						tempScore += palindromeLength;
+						// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexTop--;
+					if (indexTop >= 0){
+						if (this->board[indexTop][col] == this->board[indexBot][col]){
+							tempScore += palindromeLength;
+							// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexBot++;
+				}
+				else{
+					palindromeLength += 2;
+					indexTop--;
+					indexBot++;
+				}
+			}
+		}
+		this->stateScore = tempScore;
 	}
 
 	void printboard()
