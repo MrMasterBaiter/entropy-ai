@@ -9,11 +9,11 @@ static int board_Size;
 
 class action{
 public:
-	int x,y,x1,y1;
-	action(){
+	 int x,y,x1,y1;
+	 action(){
 
-	}
-	action(int i,int j,int k,int l){
+	 }
+	 action(int i,int j,int k,int l){
 		x=i;y=j;x1=k;y1=l;
 	}
 };
@@ -21,32 +21,29 @@ class action2{
 public:
 	int x,y;
 	int color;
-	double chance;
+	double probability;
 	action2(){
 
 	}
-	action2(int i,int j,double c,int  col){
+	action2(int i,int j,int  col,double p){
 		x=i;
 		y=j;
-		chance=c;
 		color=col;
+		probability=p;
 	}
 };
 
 class state{
 public:
 	int **board;
-	double probability;
-	player  p;
 	int depth;
-	int* colorCount;
-
+	double probability;
+	int stateScore;
+	int *parentState;
 	state(){
 		depth=0;
 		probability=1;
-		p=Max;
 		board=new int*[board_Size];
-		colorCount=new int[board_Size];
 		for(int i=0;i<board_Size;i++){
 			board[i]=new int[board_Size];
 			for(int j=0;j<board_Size;j++){
@@ -56,9 +53,7 @@ public:
 	}
 	state(state* s){
 		board=new int*[board_Size];
-		colorCount=new int[board_Size];
 		for(int i=0;i<board_Size;i++){
-			colorCount[i]=s->colorCount[i];
 			board[i]=new int[board_Size];
 			for(int j=0;j<board_Size;j++){
 				board[i][j]=s->board[i][j];
@@ -66,49 +61,41 @@ public:
 		}
 		probability=s->probability;
 		depth=s->depth;
-		p=s->p;
 	}
 	~state(){
 		for(int i=0;i<board_Size;i++){
 			delete[] board[i];
 		}
 		delete[] board;
-		delete[] colorCount;
 	}
-	vector<action2>chaosActions(){
-		int colorSum=0;
-		double chanceList[board_Size];
-		for(int i=0;i<board_Size;i++){
-			colorSum+=colorCount[i];
-		}
-		for(int i=0;i<board_Size;i++){
-			double chance=(board_Size - colorCount[i]);
-			chance/=((board_Size*board_Size)-colorSum);
-			chanceList[i]=chance;
-		}
-		vector<action2> actions;
-		for(int i=0;i<board_Size;i++){
-			for(int j=0;j<board_Size;j++){
-				if(board[i][j]==-1){
-					for(int k=0;k<board_Size;k++){
-						if(chanceList[k]>0){
-							action2 a(i,j,chanceList[k],k);
-							actions.push_back(a);
-						}
-					}
-				}
-			}
-		}
-		return actions;
-
+	// state* result(state* s, action a){
+	// 	state* s1=new state(s);
+	// 	int temp=s1->board[a.x][a.y];
+	// 	s1->board[a.x][a.y]=-1;
+	// 	s1->board[a.x1][a.y1]=temp;
+	// 	s1->depth=s->depth+1;
+	// 	return s1;
+	// }
+	// state* result2(state*s, action2 a){
+	// 	state* s1=new state(s);
+	// 	s1->board[a.x][a.y]=a.color;
+	// 	s1->depth=s->depth+1;
+	// 	s1->probability*=a.probability;
+	// 	return s1;
+	// }
+	int utility(){
+		numPalindrome();
+		return this->stateScore;
 	}
 	
 	vector<action> orderActions(){
 		vector<action> actions;
+		action a(0,0,0,0);
+		actions.push_back(a);
+
 		for(int i=0;i<board_Size;i++){
 			for(int j=0;j<board_Size;j++){
 				if(board[i][j]!=-1){
-					// vector1.insert( vector1.end(), vector2.begin(), vector2.end() );
 					vector<action> right,left,up,down;
 					right=moveRight(i,j);
 					left=moveLeft(i,j);
@@ -124,24 +111,8 @@ public:
 		}
 		return actions;
 	}
-	state* result(state* s, action a){
-		state* s1=new state(s);
-		s1->board[a.x1][a.y1]=s1->board[a.x][a.y];
-		s1->board[a.x][a.y]=-1;
-		s1->depth=s->depth+1;
-		return s1;
-	}
-	state* result2(state*s, action2 a){
-		state* s1=new state(s);
-		s1->board[a.x][a.y]=a.color;
-		s1->colorCount[a.color]++;
-		s1->depth=s->depth+1;
-		s1->probability*=a.chance;
-		return s1;
-	}
-	int utility(){
-		return numPalindrome();
-	}
+	
+	
 
 	vector<action> moveRight(int i,int j){
 		int k=i+1;
@@ -324,6 +295,72 @@ public:
 		}
 	}
 	*/
+
+	void numPalindrome(){
+		int score = 0;
+		int palindromeLength = 0;
+		for (int row = 0; row < board_Size; row++){
+			for (int col = 0; col < board_Size; col++){
+				palindromeLength = 2;
+				int indexLeft = col;
+				int indexRight = col+1;
+				while ((indexLeft >= 0) && (indexRight <= board_Size-1)){
+					if (board[row][indexRight] != -1){
+						if (board[row][indexLeft] == board[row][indexRight]){
+							score += palindromeLength;
+							// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+						}
+						palindromeLength++;
+						indexLeft--;
+						if (indexLeft >= 0){
+							if (board[row][indexLeft] == board[row][indexRight]){
+								score += palindromeLength;
+								// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+							}
+						}
+						palindromeLength++;
+						indexRight++;
+					}
+					else{
+						indexLeft--;
+						indexRight++;
+						palindromeLength += 2;
+					}
+				}
+
+				palindromeLength = 2;
+				int indexTop = row;
+				int indexBot = row+1;
+				while ((indexTop >= 0) && (indexBot <= board_Size-1)){
+					if (board[indexBot][col] != -1){
+						if (board[indexTop][col] == board[indexBot][col]){
+							score += palindromeLength;
+							// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+						}
+						palindromeLength++;
+						indexTop--;
+						if (indexTop >= 0){
+							if (board[indexTop][col] == board[indexBot][col]){
+								score += palindromeLength;
+								// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+							}
+						}
+						palindromeLength++;
+						indexBot++;
+					}
+					else{
+						palindromeLength += 2;
+						indexTop--;
+						indexBot++;
+					}
+				}
+				// cout<<"score = "<<score<<endl;
+			}
+		}
+		this->stateScore = score;
+		//return this->stateScore;
+	}
+
 	void printvector(vector<action> v){
 		int l=v.size();
 		for(int i=0;i<l;i++){
@@ -332,48 +369,6 @@ public:
 		}
 		cout<<"new vector"<<endl;
 	}
-
-	int numPalindrome(){
-		int score = 0;
-		int palindromeLength = 0;
-		for (int row = 0; row < board_Size; row++){
-			for (int col = 0; col < board_Size; col++){
-				palindromeLength = 2;
-				int indexLeft = col-1;
-				int indexRight = col+1;
-				while((indexLeft>=0) && (indexRight<=board_Size)){
-					if( (board[row][col] == board[row][indexRight]) && (board[row][col] != -1) ){
-						score += palindromeLength;
-						palindromeLength++;
-					}
-					if((board[row][indexLeft] == board[row][indexRight]) && (board[row][indexLeft] != -1)){
-						score += palindromeLength;
-						palindromeLength++;
-					}
-					indexRight++;
-					indexLeft--;
-				}
-
-				palindromeLength = 2;
-				int indexTop = row-1;
-				int indexBot = row+1;
-				while((indexTop >= board_Size) && (indexBot <= board_Size)){
-					if( (board[row][col] == board[indexBot][col]) && (board[row][col] != -1) ){
-						score += palindromeLength;
-						palindromeLength++;
-					}
-					if ((board[indexTop][col] == board[indexBot][col]) && (board[indexTop][col] != -1)){
-						score += palindromeLength;
-						palindromeLength++;
-					}
-					indexTop--;
-					indexBot++;
-				}
-			}
-		}
-		return score;
-	}
-
 	void printboard()
 	{
 		for(int i=0;i<board_Size;i++){
@@ -386,36 +381,5 @@ public:
 	}
 
 };
-// int main(){
-// 	board_Size=5;
-// 	int r,b,y,o;
-
-// 	r=1;b=2;y=3;o=4;
-// 	state s;
-
-// 	s.board[0][0]=r;
-// 	s.board[0][1]=r;
-// 	s.board[0][2]=r;
-// 	s.board[0][3]=r;
-// 	s.board[0][4]=r;
-
-// 	s.board[0][0]=r;
-// 	s.board[1][0]=y;
-// 	s.board[2][0]=b;
-// 	s.board[3][0]=y;
-// 	s.board[4][0]=r;
-// 	cout<<(s.p==Max);
-// 	//cout<<s.palindromicScore()<<endl;
-// 	 action a(3,3,0,0);
-// 	// state* s1=s.result(&s,a);
-// 	// printvector(s.actions());
-// 	// cout<<"partition"<<endl;
-// 	// delete s1;
-// 	//printvector(s1->actions());
-
-// 	//cout<<s.board[3][3];
-	
-// 	// cout<<a.x<<a.y<<a.x1<<a.y1;
-// }
 
  

@@ -124,7 +124,7 @@ double min_Value(int alpa, int bta){
 	if(terminal_Test()){
 		double util=currentState->utility();
 		int d=currentState->depth;
-		return chance[d]*util; 
+		return chance[d]*util;
 	}
 	double v=10000;
 	vector<action2> actions=chaosActions();
@@ -190,13 +190,13 @@ void chaosDeMove(action2 a){
 void orderFinalMove(action a){
 	int temp=currentState->board[a.x][a.y];
 	currentState->board[a.x][a.y]=currentState->board[a.x1][a.y1];
-	currentState->board[a.x1][a.y1]=temp;	
+	currentState->board[a.x1][a.y1]=temp;
 }
 
 void orderMove(action a){
 	int temp=currentState->board[a.x][a.y];
 	currentState->board[a.x][a.y]=currentState->board[a.x1][a.y1];
-	currentState->board[a.x1][a.y1]=temp;	
+	currentState->board[a.x1][a.y1]=temp;
 	currentState->depth++;
 	int x=currentState->depth;
 	chance[x]=chance[x-1];
@@ -205,9 +205,9 @@ void orderDeMove(action a){
 	action b(a.x1,a.y1,a.x,a.y);
 	int temp=currentState->board[b.x][b.y];
 	currentState->board[b.x][b.y]=currentState->board[b.x1][b.y1];
-	currentState->board[b.x1][b.y1]=temp;	
+	currentState->board[b.x1][b.y1]=temp;
 	currentState->depth--;
-	
+
 }
 void addColor(int clr){
 	count++;
@@ -278,15 +278,13 @@ int main(){
 		action b=minmax->order_Decision(-1000,1000);
 		minmax->currentState->printboard();
 		cout<<endl<<b.x<<" "<<b.y<<" "<<b.x1<<" "<<b.y1<<endl;
-		cout<<minmax->nodecount<<" "<<minmax->nodecount2;
-		cout<<endl;
+		cout<<minmax->nodecount<<" "<<minmax->nodecount2<<endl;
 		minmax->nodecount=minmax->nodecount2=0;
 		// cout<<minmax->nodecount<<" "<<minmax->nodecount2<<endl;
 		// minmax->nodecount=0;
 		// minmax->nodecount2=0;
 	}
-
-	
+    return 0;
 }
 // action order_Decision(state* s,double alpha, double beta){
 // 	int besti=board_Size;
@@ -323,7 +321,7 @@ int main(){
 // 			vector<action2> a2=s->chaosActions(color[i],p);
 // 			actions.insert(actions.end(),a2.begin(),a2.end());
 // 		}
-		
+
 // 	}
 // 	int l=actions.size();
 // 	nodecount+=l;
@@ -358,7 +356,7 @@ int main(){
 // 			vector<action2> a=s->chaosActions(color[i],p);
 // 			actions.insert(actions.end(),a.begin(),a.end());
 // 		}
-		
+
 // 	}
 // 	int l=actions.size();
 // 	nodecount2+=l;
