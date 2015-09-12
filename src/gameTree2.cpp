@@ -25,7 +25,7 @@ public:
 	action2(){
 	}
 
-	action2(int i,int j,double c,int  col){
+	action2(int i, int j, double c, int col){
 		x=i;
 		y=j;
 		chance=c;
