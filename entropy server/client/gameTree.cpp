@@ -7,24 +7,27 @@ enum player{Min,Max};
 
 static int board_Size;
 
+// Order's action
 class action{
 public:
-	 int x,y,x1,y1;
-	 action(){
+	int x,y,x1,y1;
+	action(){
+	}
 
-	 }
-	 action(int i,int j,int k,int l){
+	action(int i,int j,int k,int l){
 		x=i;y=j;x1=k;y1=l;
 	}
 };
+
+// Chaos's action
 class action2{
 public:
 	int x,y;
 	int color;
 	double probability;
 	action2(){
-
 	}
+
 	action2(int i,int j,int  col,double p){
 		x=i;
 		y=j;
@@ -39,7 +42,8 @@ public:
 	int depth;
 	double probability;
 	int stateScore;
-	int *parentState;
+	state *parentState;
+	
 	state(){
 		depth=0;
 		probability=1;
@@ -51,6 +55,7 @@ public:
 			}
 		}
 	}
+
 	state(state* s){
 		board=new int*[board_Size];
 		for(int i=0;i<board_Size;i++){
@@ -62,32 +67,19 @@ public:
 		probability=s->probability;
 		depth=s->depth;
 	}
+
 	~state(){
 		for(int i=0;i<board_Size;i++){
 			delete[] board[i];
 		}
 		delete[] board;
 	}
-	// state* result(state* s, action a){
-	// 	state* s1=new state(s);
-	// 	int temp=s1->board[a.x][a.y];
-	// 	s1->board[a.x][a.y]=-1;
-	// 	s1->board[a.x1][a.y1]=temp;
-	// 	s1->depth=s->depth+1;
-	// 	return s1;
-	// }
-	// state* result2(state*s, action2 a){
-	// 	state* s1=new state(s);
-	// 	s1->board[a.x][a.y]=a.color;
-	// 	s1->depth=s->depth+1;
-	// 	s1->probability*=a.probability;
-	// 	return s1;
-	// }
+
 	int utility(){
 		numPalindrome();
 		return this->stateScore;
 	}
-	
+
 	vector<action> orderActions(){
 		vector<action> actions;
 		action a(0,0,0,0);
@@ -111,8 +103,6 @@ public:
 		}
 		return actions;
 	}
-	
-	
 
 	vector<action> moveRight(int i,int j){
 		int k=i+1;
@@ -130,6 +120,7 @@ public:
 		}
 		return actions;
 	}
+
 	vector<action> moveLeft(int i,int j){
 		int k=i-1;
 		vector<action> actions;
@@ -146,6 +137,7 @@ public:
 		return actions;
 
 	}
+
 	vector<action> moveUp(int i,int j){
 		int k=j+1;
 		vector<action> actions;
@@ -162,6 +154,7 @@ public:
 		return actions;
 
 	}
+
 	vector<action> moveDown(int i,int j){
 		int k=j-1;
 		vector<action> actions;
@@ -177,124 +170,6 @@ public:
 		}
 		return actions;
 	}
-
-	/*
-	int palindromicScore(){
-		int score=0;
-		for(int row=0;row<board_Size;row++){
-			bool b=false;
-			int first,second;
-			for(int i=0;i<board_Size;i++){
-				if(board[row][i]!=-1){
-					if(!b){
-						first=i;
-						second=i;
-						b=true;
-					}
-					else{
-						second=i;
-					}
-				}
-				else{
-					if(b){
-						score+=sumPalindrome(row,first,row,second);
-						b=false;
-					}
-				}
-			}
-			if(b){
-				score+=sumPalindrome(row,first,row,second);
-			}
-		}
-
-
-		for(int column=0;column<board_Size;column++){
-			bool b=false;
-			int first,second;
-			for(int i=0;i<board_Size;i++){
-				if(board[i][column]!=-1){
-					if(!b){
-						first=i;
-						second=i;
-						b=true;
-					}
-					else{
-						second=i;
-					}
-				}
-				else{
-					if(b){
-						score+=sumPalindrome(first,column,second,column);
-						b=false;
-					}
-				}
-			}
-			if(b){
-				score+=sumPalindrome(first,column,second,column);
-			}
-		}
-		return score;
-	}
-	int sumPalindrome(int i,int j, int k, int l){
-		int score=0;
-		if(i==k){
-			int count =2;
-			int size=l-j+1;
-			while(count<=size){
-				int j1=j;
-				while(j1+count-1<=l){
-					if(isPalindrome(i,j1,k,(j1+count-1))){
-						score+=count;
-					}
-					j1++;
-				}
-				count++;
-			}
-		}
-		else if(j==l){
-			int count =2;
-			int size=k-i+1;
-			while(count<=size){
-				int i1=i;
-				while(i1+count-1<=k){
-					if(isPalindrome(i1,j,(i1+count-1),l)){
-						score+=count;
-					}
-					i1++;
-				}
-				count++;
-			}
-		}
-		return score;
-	}
-
-	bool isPalindrome(int i,int j, int k, int l){
-		if(i>=k && j>=l){
-			return true;
-		}
-		else if(i==k){
-			// assume j<=l
-			if(board[i][j]==board[k][l]){
-				return isPalindrome(i,j+1,k,l-1);
-			}
-			else{
-				return false;
-			}
-		}
-		else if(j==l){
-			//assume i<=k
-			if(board[i][j]==board[k][l]){
-				return isPalindrome(i+1,j,k-1,l);
-			}
-			else{
-				return false;
-			}
-		}
-		else{
-			return false;
-		}
-	}
-	*/
 
 	void numPalindrome(){
 		int score = 0;
@@ -361,6 +236,126 @@ public:
 		//return this->stateScore;
 	}
 
+	void updateScore(action2 a){
+		int tempScore = parentState->stateScore;
+		int row = a.x;
+		int col = a.y;
+		for(int i = 0; i < board_Size; i++){	
+			int palindromeLength = 2;
+			int indexLeft = i;
+			int indexRight = i+1;
+			while ((indexLeft >= 0) && (indexRight <= board_Size-1)){
+				if (parentState->board[row][indexRight] != -1){
+					if (parentState->board[row][indexLeft] == parentState->board[row][indexRight]){
+						tempScore -= palindromeLength;
+						// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexLeft--;
+					if (indexLeft >= 0){
+						if (parentState->board[row][indexLeft] == parentState->board[row][indexRight]){
+							tempScore -= palindromeLength;
+							// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexRight++;
+				}
+				else{
+					indexLeft--;
+					indexRight++;
+					palindromeLength += 2;
+				}
+			}
+		}
+		for(int i = 0; i < board_Size; i++){
+			int palindromeLength = 2;
+			int indexTop = i;
+			int indexBot = i+1;
+			while ((indexTop >= 0) && (indexBot <= board_Size-1)){
+				if (parentState->board[indexBot][col] != -1){
+					if (parentState->board[indexTop][col] == parentState->board[indexBot][col]){
+						tempScore -= palindromeLength;
+						// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexTop--;
+					if (indexTop >= 0){
+						if (parentState->board[indexTop][col] == parentState->board[indexBot][col]){
+							tempScore -= palindromeLength;
+							// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexBot++;
+				}
+				else{
+					palindromeLength += 2;
+					indexTop--;
+					indexBot++;
+				}
+			}
+		}
+
+		for(int i = 0; i < board_Size; i++){	
+			int palindromeLength = 2;
+			int indexLeft = i;
+			int indexRight = i+1;
+			while ((indexLeft >= 0) && (indexRight <= board_Size-1)){
+				if (this->board[row][indexRight] != -1){
+					if (this->board[row][indexLeft] == this->board[row][indexRight]){
+						tempScore += palindromeLength;
+						// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexLeft--;
+					if (indexLeft >= 0){
+						if (this->board[row][indexLeft] == this->board[row][indexRight]){
+							tempScore += palindromeLength;
+							// cout<<"row "<<row<<" indexLeft "<<indexLeft<<" indexRight "<<indexRight<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexRight++;
+				}
+				else{
+					indexLeft--;
+					indexRight++;
+					palindromeLength += 2;
+				}
+			}
+		}
+		for(int i = 0; i < board_Size; i++){
+			int palindromeLength = 2;
+			int indexTop = i;
+			int indexBot = i+1;
+			while ((indexTop >= 0) && (indexBot <= board_Size-1)){
+				if (this->board[indexBot][col] != -1){
+					if (this->board[indexTop][col] == this->board[indexBot][col]){
+						tempScore += palindromeLength;
+						// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+					}
+					palindromeLength++;
+					indexTop--;
+					if (indexTop >= 0){
+						if (this->board[indexTop][col] == this->board[indexBot][col]){
+							tempScore += palindromeLength;
+							// cout<<"indexTop "<<indexTop<<" indexBot "<<indexBot<<" col "<<col<<" length "<<palindromeLength<<endl;
+						}
+					}
+					palindromeLength++;
+					indexBot++;
+				}
+				else{
+					palindromeLength += 2;
+					indexTop--;
+					indexBot++;
+				}
+			}
+		}
+		this->stateScore = tempScore;
+	}
+
 	void printvector(vector<action> v){
 		int l=v.size();
 		for(int i=0;i<l;i++){
@@ -369,8 +364,8 @@ public:
 		}
 		cout<<"new vector"<<endl;
 	}
-	void printboard()
-	{
+
+	void printboard(){
 		for(int i=0;i<board_Size;i++){
 			for(int j=0;j<board_Size;j++){
 				cout<<board[i][j]<<" | ";
@@ -379,7 +374,4 @@ public:
 		}
 		cout<<endl<<endl;
 	}
-
 };
-
- 

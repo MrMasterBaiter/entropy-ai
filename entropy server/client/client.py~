@@ -13,7 +13,7 @@ import os
 sys.path.insert(0, os.path.realpath('../utils/'))
 from nbstreamreader import NonBlockingStreamReader as NBSR
 
-botname = 'dildoInAss'	 # PLEASE CHOOSE A UNIQUE BOTNAME
+botname = 'bazooka'	 # PLEASE CHOOSE A UNIQUE BOTNAME
 
 SAFETY_TIMEOUT = 65 # For dumb clients, who think too much or die while thinking
 server_address = 'localhost'

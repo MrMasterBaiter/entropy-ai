@@ -2,5 +2,5 @@
 #python -u myAI.py
 
 # FOR c++
-g++ myAI.cpp
+g++ minMax.cpp
 ./a.out
