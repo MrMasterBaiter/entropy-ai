@@ -64,12 +64,12 @@ public:
 		orderFinalMove(a);
 		return a;
 	}
-	action2 chaos_Decision(double alpa, double bta){
+	action2 chaos_Decision(double alpa, double bta,int clr){
 		double alpha=alpa;
 		double beta=bta;
 		action2 a;
 		double value=10000;
-		vector<action2> actions=chaosActions();
+		vector<action2> actions=chaosActions(true,clr);
 		int l=actions.size();
 		for(int i=0;i<l;i++){
 			action2 b=actions.at(i);
@@ -127,7 +127,7 @@ public:
 			return chance[d]*util;
 		}
 		double v=10000;
-		vector<action2> actions=chaosActions();
+		vector<action2> actions=chaosActions(false,0);
 		int l=actions.size();
 		nodecount2+=l;
 		for(int i=0;i<l;i++){
@@ -148,26 +148,39 @@ public:
 		}
 		return v;
 	}
-	vector<action2> chaosActions(){
+	vector<action2> chaosActions(bool b,int c){
 		vector<action2> actions;
-		for(int i=0;i<board_Size;i++){
-			for(int j=0;j<board_Size;j++){
-				if(currentState->board[i][j]==-1){
-					for(int k=0;k<board_Size;k++){
-						if(colorCount[k]<board_Size){
-							double y=(board_Size*board_Size-count);
-							double x=(board_Size-count);
-							double p=x/y;
-							action2 a(i,j,color[k],p);
-							actions.push_back(a);
-						}
-						else{
-							break;
+		if(b){
+			for(int i=0;i<board_Size;i++){
+				for(int j=0;j<board_Size;j++){
+					if(currentState->board[i][j]==-1){
+						action2 a(i,j,c,1);
+						actions.push_back(a);
+					}
+				}
+			}
+		}
+		else{
+			for(int i=0;i<board_Size;i++){
+				for(int j=0;j<board_Size;j++){
+					if(currentState->board[i][j]==-1){
+						for(int k=0;k<board_Size;k++){
+							if(colorCount[k]<board_Size){
+								double y=(board_Size*board_Size-count);
+								double x=(board_Size-count);
+								double p=x/y;
+								action2 a(i,j,color[k],p);
+								actions.push_back(a);
+							}
+							else{
+								break;
+							}
 						}
 					}
 				}
 			}
 		}
+		
 		return actions;
 	}
 	void chaosFinalMove(action2 a){
@@ -276,16 +289,9 @@ void moveOrder(){
 		action2 a(x, y, color, 1);
 		minmax->chaosFinalMove(a);
 		action b = minmax->order_Decision(-1000, 1000);
-		// cerr<<"after action"<<endl;
-		// minmax->currentState->printboard();
 		cerr<<"score of state is "<<minmax->currentState->utility()<<endl;
 		cout << b.x << " " << b.y << " " << b.x1 << " " << b.y1 << endl;
 		cerr << b.x << " " << b.y << " " << b.x1 << " " << b.y1 << endl;
-		// cout<<minmax->nodecount<<" "<<minmax->nodecount2<<endl;
-		// minmax->nodecount=minmax->nodecount2=0;
-		// cout<<minmax->nodecount<<" "<<minmax->nodecount2<<endl;
-		// minmax->nodecount=0;
-		// minmax->nodecount2=0;
 	}
 	delete[] minmax;
 }
@@ -298,19 +304,18 @@ void moveChaos(){
 	int color;
 	int x, y, x1, y1;
 	for(; i < 25; i++){
-		// first move
 		if(i == 0){
 			cin>>c;
 			color = c;
 			color -= 65;
-			action2 b = minmax->chaos_Decision(-1000, 1000);
+			action2 b = minmax->chaos_Decision(-1000, 1000,color);
 			cout << b.x << " " << b.y << endl;
 		}
 		else{
 			cin >> x >> y >> x1 >> y1;
 			action a(x, y, x1, y1);
 			minmax->orderFinalMove(a);
-			action2 b = minmax->chaos_Decision(-1000, 1000);
+			action2 b = minmax->chaos_Decision(-1000, 1000,color);
 			cout << b.x << " " << b.y << endl;
 		}
 	}
