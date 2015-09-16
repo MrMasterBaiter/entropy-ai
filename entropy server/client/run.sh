@@ -2,5 +2,5 @@
 #python -u myAI.py
 
 # FOR c++
-g++ minMax.cpp
+python client.py $1 $2 $3 $4
 ./a.out
